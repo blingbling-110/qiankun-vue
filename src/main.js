@@ -1,11 +1,17 @@
 import './public-path'
 import { createApp } from 'vue'
 import App from './App.vue'
-import router from './router'
+import routes from './router'
+import { createRouter, createWebHistory } from 'vue-router'
 
-const app = createApp(App)
+let app = null
 function render (props = {}) {
   const { container } = props
+  app = createApp(App)
+  const router = createRouter({
+    history: createWebHistory(window.__POWERED_BY_QIANKUN__ ? '/app-vue/' : process.env.BASE_URL),
+    routes
+  })
   app.use(router).mount(container ? container.querySelector('#app') : '#app')
 }
 
@@ -22,4 +28,5 @@ export async function mount (props) {
 }
 export async function unmount () {
   app.unmount()
+  app = null
 }
